@@ -66,3 +66,47 @@ def rho_pollard(number):
 
 
 print(rho_pollard(1582)[1])
+
+
+
+def pho_pollard_logarithm(p, g, t):
+    # 2) Один алгоритм знаходження дискретного логарифма: ро-алгоритм Полларда
+    a, b, x = [], [], []
+    a[0], b[0], x[0] = 0, 0, 1
+    two_triples = []
+    i = 1
+    while not x_i == x_2i:
+
+        def ai_bi(i, p, a, b):
+            if 0 < x[i-1] < p/3:
+                a[i], b[i] = (a[i-1] + 1) % (p - 1), b[i-1] % (p - 1)
+            elif p/3 < x[i-1] < 2*p/3:
+                a[i], b[i] = 2*a[i-1] % (p-1), 2*b[i-1] % (p-1)
+            elif 2*p/3 < x[i-1] < p:
+                a[i], b[i] = a[i-1] % (p-1), b[i] % (p-1)
+
+            return a[i], b[i]
+
+        # why can't x be more than p or less than 0?? TODO
+
+        a_i, b_i = ai_bi(i, p, a, b)
+        a_2i, b_2i = ai_bi(2*i, p, a, b)
+
+        def xi(i, p, t, g, x):
+            if 0 < x[i-1] < p/3:
+                x[i] = t * x[i-1] % p
+            elif p / 3 < x[i - 1] < 2 * p / 3:
+                x[i] = (x[i-1] ** 2) % p
+            elif 2 * p / 3 < x[i - 1] < p:
+                g * x[i-1] % p
+
+            return x[i]
+
+        x_i = xi(i, p, t, g, x)
+        x_2i = xi(2*i, p, t, g, x)
+
+    # making up the equation TODO
+    def eq(x, y, a_i, a_2i, p):
+        (x * (a_2i - a_i)/gsd(a_2i - a_i, p - 1) + y * (p - 1)/(a_2i - a_i, p - 1)) % p = (b_i - b_2i) % p
+
+
