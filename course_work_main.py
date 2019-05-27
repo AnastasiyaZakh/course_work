@@ -1,3 +1,5 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
 from math import sqrt
 # 1) Один алгоритм факторизації довгих цілих чисел на вибір:
 #       ро-алгоритм Полларда або алгоритм квадратичного решета.
@@ -61,7 +63,7 @@ def rho_pollard(number):
     sl = []
     for factor, power in factor_powers.items():
         sl.append(f'{factor}^{power}')
-
+    print (factors)
     return factor_powers, ' * '.join(sl)
 
 
@@ -73,7 +75,7 @@ def pho_pollard_logarithm(p, g, t):
     # 2) Один алгоритм знаходження дискретного логарифма: ро-алгоритм Полларда
     a, b, x = [], [], []
     a[0], b[0], x[0] = 0, 0, 1
-    two_triples = []
+
     i = 1
     while not x_i == x_2i:
 
@@ -105,8 +107,137 @@ def pho_pollard_logarithm(p, g, t):
         x_i = xi(i, p, t, g, x)
         x_2i = xi(2*i, p, t, g, x)
 
-    # making up the equation TODO
-    def eq(x, y, a_i, a_2i, p):
-        (x * (a_2i - a_i)/gsd(a_2i - a_i, p - 1) + y * (p - 1)/(a_2i - a_i, p - 1)) % p = (b_i - b_2i) % p
+    # # making up the equation TODO
+    # def eq(x, y, a_i, a_2i, p):
+    #     (x * (a_2i - a_i)/gcd(a_2i - a_i, p - 1) + y * (p - 1)/(a_2i - a_i, p - 1)) % p = (b_i - b_2i) % p
 
+    if gcd(a_2i-a_i, p-1) == 1:
+        # TODO
+        return 0
+    elif not gcd(a_2i-a_i, p-1) == 1:
+        # расширенный алгоритм Евклида
+        A = a_2i + a_i
+        B = p - 1
+        euclid_arr = []
+        if A > B:
+            euclid_arr[0][0], euclid_arr[0][1] =  A, B
+            euclid_arr[0].append(A%B)
+            euclid_arr[0].append(A//B)
+            i = 0
+            while not euclid_arr[i][2] == 0:
+                euclid_arr[i+1][0] = euclid_arr[i+1][1]
+                euclid_arr[i+1][1] = euclid_arr[i+1][2]
+                euclid_arr[i+1][2] = euclid_arr[i+1][0] % euclid_arr[i+1][1]
+                euclid_arr[i+1][2] = euclid_arr[i+1][0] // euclid_arr[i+1][1]
+                i += 1
+            euclid_arr[i].append(0)
+            euclid_arr[i].append(1)
+            while not i == 0:
+                return 'finish this'
+
+        # import numpy as np
+        # A, B = 7, 4
+        # empty_raw = np.zeros((1, 6))
+        # euclid_arr = np.zeros((3, 6))
+        # euclid_arr[0][0], euclid_arr[0][1] = A, B
+        # euclid_arr[0][2] = A % B
+        # euclid_arr[0][3] = A // B
+        # i = 0
+        # while not euclid_arr[i][2] == 0:
+        #     euclid_arr[i + 1][0] = euclid_arr[i][1]
+        #     euclid_arr[i + 1][1] = euclid_arr[i][2]
+        #     euclid_arr[i + 1][2] = euclid_arr[i + 1][0] % euclid_arr[i + 1][1]
+        #     euclid_arr[i + 1][2] = euclid_arr[i + 1][0] // euclid_arr[i + 1][1]
+        #     euclid_arr = np.add(empty_raw)
+        #     i += 1
+        # euclid_arr[i][4] = 0
+        # euclid_arr[i][5] = 1
+        #
+        # print(euclid_arr)
+
+
+def symbols(a, b):
+    # 4) Legendre symbol & Jacobi
+    def jacobi(a, b):
+        if not gcd(a, b) == 1:
+            return 0
+        r = 1
+        if a < 0:
+            a = -a
+            if b % 4 == 3:
+                r = -r
+        while True:
+            t = 0
+            while a % 2 == 0:
+                t = t + 1
+                a = a / 2
+
+            if not t % 2 == 0:
+                if b % 8 == 3 or b % 8 == 5:
+                    r = -r
+
+            if a % 4 == b % 4 == 3:
+                r = -r
+            c = a
+            a = b % c
+            b = c
+            if a == 0:
+                break
+            else:
+                return r
+
+    def legendre(a, b):
+        def isPrime(a):
+            return all(a % i for i in range(2, a))
+
+        # http://stackoverflow.com/a/14793082/562769
+        def factorize(n):
+            factors = []
+
+            p = 2
+            while True:
+                while (n % p == 0 and n > 0):  # while we can divide by smaller number, do so
+                    factors.append(p)
+                    n = n / p
+                p += 1  # p is not necessary prime, but n%p == 0 only for prime numbers
+                if p > n / p:
+                    break
+            if n > 1:
+                factors.append(n)
+            return factors
+
+        def calculateLegendre(a, p):
+            """
+            Calculate the legendre symbol (a, p) with p is prime.
+            The result is either -1, 0 or 1
+            """
+            if a >= p or a < 0:
+                return calculateLegendre(a % p, p)
+            elif a == 0 or a == 1:
+                return a
+            elif a == 2:
+                if p % 8 == 1 or p % 8 == 7:
+                    return 1
+                else:
+                    return -1
+            elif a == p - 1:
+                if p % 4 == 1:
+                    return 1
+                else:
+                    return -1
+            elif not isPrime(a):
+                factors = factorize(a)
+                product = 1
+                for pi in factors:
+                    product *= calculateLegendre(pi, p)
+                return product
+            else:
+                if ((p - 1) / 2) % 2 == 0 or ((a - 1) / 2) % 2 == 0:
+                    return calculateLegendre(p, a)
+                else:
+                    return (-1) * calculateLegendre(p, a)
+
+        if __name__ == "__main__":
+            import doctest
+            doctest.testmod()
 
