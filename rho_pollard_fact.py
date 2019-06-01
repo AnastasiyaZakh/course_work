@@ -65,6 +65,5 @@ def rho_pollard(number):
     # print (factors)
     # return factor_powers, ' * '.join(sl)
 
-
-print(rho_pollard(1588))
+# print(rho_pollard(654))
 

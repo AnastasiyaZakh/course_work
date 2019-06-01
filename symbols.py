@@ -6,14 +6,12 @@ from cmath import sqrt
 from rho_pollard_fact import rho_pollard
 
 
-# def symbols(a: int, b: int) -> Tuple[int, int]:
-
-
 def legendre(a, b):
 
     leg = 5
     sign = 1
     while a != -1 and sqrt(a) ** 2 != a:
+        if a % b == 0: leg = 0; break
         if a < b:
             a, b = b, a
             sign *= (-1) ** ((a - 1) / 2 * (b - 1) / 2)
@@ -79,10 +77,8 @@ class TestSymbols(unittest.TestCase):
         self.assertEqual(jacobi(3, 29), (-1))
 
     def test_3(self):
-        self.assertEqual(jacobi(3, 654), (1))
+        self.assertEqual(jacobi(3, 654), (0))
 
-    # def test_4(self):
-    #     self.assertEqual(symbols(45, 113), (-1, -1))
 
 if __name__ == '__main__':
     unittest.main()
