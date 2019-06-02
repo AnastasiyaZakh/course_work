@@ -1,13 +1,6 @@
-# !/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from math import sqrt
-
-
-def gcd(a, b):
-    while a % b != 0:
-        a, b = b, a % b
-    return b
+#!/usr/bin/env python
+from extended_euclid import extended_euclid
+from typing import Tuple
 
 
 def _rho_pollard(number):
@@ -42,28 +35,19 @@ def _rho_pollard(number):
 
 
 def rho_pollard(number):
-
     factors = _rho_pollard(number)
-    factors_all = []
+
+    factor_powers = {}
 
     for factor in factors:
         while number % factor == 0:
-            factors_all.append(factor)
-            number /= factor
-    return factors_all
+            factor_powers[factor] = factor_powers.get(factor, 0) + 1
+            number //= factor
 
-    # factor_powers = {}
-    #
-    # for factor in factors:
-    #     while number % factor == 0:
-    #         factor_powers[factor] = factor_powers.get(factor, 0) + 1
-    #         number //= factor
-    #
-    # sl = []
-    # for factor, power in factor_powers.items():
-    #     sl.append(f'{factor}^{power}')
-    # print (factors)
-    # return factor_powers, ' * '.join(sl)
+    sl = []
+    for factor, power in factor_powers.items():
+        sl.append(f'{factor}^{power}')
+    print (factors)
+    return factor_powers, ' * '.join(sl)
 
-# print(rho_pollard(654))
 
