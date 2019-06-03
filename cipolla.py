@@ -2,8 +2,8 @@
 import unittest
 from symbols import legendre
 
-def cipolla(a: int, p: int) -> str:
 
+def cipolla(a: int, p: int) -> str:
     if legendre(a, p) == -1:
         return 'Немає розв*язку'
     elif legendre(a, p) == 1:
@@ -18,11 +18,10 @@ def cipolla(a: int, p: int) -> str:
     return f'x = ±{t1}'
 
 
-
 class TestCipolla(unittest.TestCase):
     def test_1(self):
-        self.assertEqual(cipolla(2, 17), False)
+        self.assertEqual(cipolla(2, 17), 'x = ±6')
+
 
 if __name__ == '__main__':
     unittest.main()
-

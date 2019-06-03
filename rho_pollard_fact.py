@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 from extended_euclid import extended_euclid
 from typing import Tuple
+from math import sqrt
+import unittest
 
 
-def _rho_pollard(number):
+def _rho_pollard(number: int):
     answer = set()
+    print(number)
     for d in range(2, min(int(sqrt(sqrt(number))) + 10, number)):
         if number % d == 0:
             answer.add(d)
@@ -23,7 +26,7 @@ def _rho_pollard(number):
         count = 1
         while count <= cycle_size and factor <= 1:
             x = (x * x + 1) % number
-            factor = gcd(x - x_fixed, number)
+            factor = abs(extended_euclid(x - x_fixed, number)[0])
             count += 1
         cycle_size *= 2
         x_fixed = x
@@ -34,9 +37,9 @@ def _rho_pollard(number):
         return {factor} | rho_pollard(number // factor) | answer
 
 
-def rho_pollard(number):
+def rho_pollard(number: int):
     factors = _rho_pollard(number)
-
+    # return factors
     factor_powers = {}
 
     for factor in factors:
@@ -47,7 +50,14 @@ def rho_pollard(number):
     sl = []
     for factor, power in factor_powers.items():
         sl.append(f'{factor}^{power}')
-    print (factors)
+    print(factors)
     return factor_powers, ' * '.join(sl)
 
 
+class TestRhoPollardFact(unittest.TestCase):
+    def test_1(self):
+        self.assertEqual(_rho_pollard(168), {2, 3, 7})
+
+
+if __name__ == '__main__':
+    unittest.main()

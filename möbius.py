@@ -55,5 +55,6 @@ class TestMöbius(unittest.TestCase):
     def test_999961_999979(self):
         self.assertEqual(möbius(999961 * 999979), 1)
 
+
 if __name__ == '__main__':
     unittest.main()
