@@ -45,6 +45,5 @@ class TestSymbols(unittest.TestCase):
         self.assertEqual(legendre(45, 113), (-1))
 
 
-
 if __name__ == '__main__':
     unittest.main()
